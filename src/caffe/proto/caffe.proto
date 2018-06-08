@@ -656,15 +656,15 @@ message LabelMap {
 message DetectionOutputParameter {
   // Yolo detection output layer
   optional uint32 side = 1 [default = 13];
-  optional uint32 num_classes = 2 [default = 20];
-  optional uint32 num_box = 3 [default = 5];
-  optional uint32 coords = 4 [default = 4];
-  optional float confidence_threshold = 5 [default = 0.01];
-  optional float nms_threshold = 6 [default = 0.45];
-  repeated float biases = 7;
-  optional string label_map_file = 8;
- optional uint32 sidex = 9 [default = 13];
- optional uint32 sidey = 10 [default = 13];
+  optional uint32 sidex = 2 [default = 13];
+  optional uint32 sidey = 3 [default = 13];
+  optional uint32 num_classes = 4 [default = 20];
+  optional uint32 num_box = 5 [default = 5];
+  optional uint32 coords = 6 [default = 4];
+  optional float confidence_threshold = 7 [default = 0.01];
+  optional float nms_threshold = 8 [default = 0.45];
+  repeated float biases = 9;
+  optional string label_map_file = 10;
 }
 
 // Message that store parameters used by DetectionEvaluateLayer

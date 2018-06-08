@@ -59,6 +59,8 @@ class ArgMaxLayer : public Layer<Dtype> {
    *       y_n = \arg\max\limits_i x_{ni}
    *      @f$ (for @f$ K = 1 @f$).
    */
+  virtual void Forward_gpu(const vector<Blob<Dtype>*>& bottom,
+	const vector<Blob<Dtype>*>& top);
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);
   /// @brief Not implemented (non-differentiable function)
