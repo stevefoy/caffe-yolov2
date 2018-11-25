@@ -22,6 +22,8 @@ void DetectionOutputLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       this->layer_param_.detection_output_param();
   CHECK(detection_output_param.has_num_classes()) << "Must specify num_classes";
   side_ = detection_output_param.side();
+  sidex_= detection_output_param.sidex();
+  sidey_= detection_output_param.sidey();
   num_classes_ = detection_output_param.num_classes();
   num_box_ = detection_output_param.num_box();
   coords_ = detection_output_param.coords();
@@ -74,12 +76,12 @@ void DetectionOutputLayer<Dtype>::Forward_cpu(
 
   Blob<Dtype> swap;
   swap.Reshape(bottom[0]->num(), bottom[0]->height()*bottom[0]->width(), num_box_, bottom[0]->channels() / num_box_);
-  //std::cout<<"4"<<std::endl;  
+  std::cout<<"bottom[0]->height()"<<bottom[0]->height()<<"bottom[0]->width()"<<bottom[0]->width()<<std::endl;
   Dtype* swap_data = swap.mutable_cpu_data();
   int index = 0;
   for (int b = 0; b < bottom[0]->num(); ++b)
-    for (int h = 0; h < bottom[0]->height(); ++h)
-      for (int w = 0; w < bottom[0]->width(); ++w)
+    for (int h = 0; h < bottom[0]->height(); ++h) //debug grid height
+      for (int w = 0; w < bottom[0]->width(); ++w) //debugged grid width
         for (int c = 0; c < bottom[0]->channels(); ++c)
         {
           swap_data[index++] = bottom[0]->data_at(b,c,h,w);	
@@ -93,12 +95,12 @@ void DetectionOutputLayer<Dtype>::Forward_cpu(
   PredictionResult<Dtype> predict;
   predicts.clear(); 
   for (int b = 0; b < swap.num(); ++b){
-    for (int j = 0; j < side_; ++j)
-      for (int i = 0; i < side_; ++i)
+    for (int j = 0; j < sidey_; ++j)
+      for (int i = 0; i < sidex_; ++i)
         for (int n = 0; n < num_box_; ++n){
-          int index = b * swap.channels() * swap.height() * swap.width() + (j * side_ + i) * swap.height() * swap.width() + n * swap.width();
-          CHECK_EQ(swap_data[index],swap.data_at(b, j * side_ + i, n, 0));
-          get_region_box(swap_data, predict, biases_, n, index, i, j, side_, side_);
+          int index = b * swap.channels() * swap.height() * swap.width() + (j * sidex_ + i) * swap.height() * swap.width() + n * swap.width();
+          CHECK_EQ(swap_data[index],swap.data_at(b, j * sidex_ + i, n, 0));
+          get_region_box(swap_data, predict, biases_, n, index, i, j, sidex_, sidey_);
           predict.objScore = sigmoid(swap_data[index+4]);
           class_index_and_score(swap_data+index+5, num_classes_, predict);
           predict.confidence = predict.objScore * predict.classScore;
