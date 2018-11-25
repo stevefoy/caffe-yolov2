@@ -663,6 +663,8 @@ message DetectionOutputParameter {
   optional float nms_threshold = 6 [default = 0.45];
   repeated float biases = 7;
   optional string label_map_file = 8;
+ optional uint32 sidex = 9 [default = 13];
+ optional uint32 sidey = 10 [default = 13];
 }
 
 // Message that store parameters used by DetectionEvaluateLayer
