@@ -68,6 +68,8 @@ class DetectionOutputLayer : public Layer<Dtype> {
   }
 
   int side_;
+  int sidex_;
+  int sidey_;
   int num_classes_;
   int num_box_;
   int coords_;
